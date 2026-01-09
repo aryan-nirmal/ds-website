@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Defence Simplified - Dark Military Theme */
+    --background: 220 18% 5%;
+    --foreground: 0 0% 90%;
+
+    --card: 220 15% 8%;
+    --card-foreground: 0 0% 90%;
+
+    --popover: 220 15% 8%;
+    --popover-foreground: 0 0% 90%;
+
+    /* Command Red - Primary CTA */
+    --primary: 3 70% 32%;
+    --primary-foreground: 0 0% 95%;
+
+    /* Muted Olive Green */
+    --secondary: 136 33% 27%;
+    --secondary-foreground: 0 0% 90%;
+
+    /* Dark muted surfaces */
+    --muted: 220 15% 12%;
+    --muted-foreground: 220 10% 60%;
+
+    /* Antique Military Gold */
+    --accent: 42 55% 55%;
+    --accent-foreground: 220 18% 5%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 15% 15%;
+    --input: 220 15% 15%;
+    --ring: 42 55% 55%;
+
+    --radius: 0.25rem;
+
+    /* Custom tokens */
+    --gold: 42 55% 55%;
+    --gold-muted: 42 40% 40%;
+    --charcoal: 220 18% 5%;
+    --charcoal-light: 220 15% 10%;
+    --olive: 136 33% 27%;
+    --command-red: 3 70% 32%;
+    --command-red-hover: 3 70% 38%;
+
+    --sidebar-background: 220 15% 8%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 42 55% 55%;
+    --sidebar-primary-foreground: 220 18% 5%;
+    --sidebar-accent: 220 15% 15%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 220 15% 15%;
+    --sidebar-ring: 42 55% 55%;
+  }
+
+  .dark {
+    --background: 220 18% 5%;
+    --foreground: 0 0% 90%;
+    --card: 220 15% 8%;
+    --card-foreground: 0 0% 90%;
+    --popover: 220 15% 8%;
+    --popover-foreground: 0 0% 90%;
+    --primary: 3 70% 32%;
+    --primary-foreground: 0 0% 95%;
+    --secondary: 136 33% 27%;
+    --secondary-foreground: 0 0% 90%;
+    --muted: 220 15% 12%;
+    --muted-foreground: 220 10% 60%;
+    --accent: 42 55% 55%;
+    --accent-foreground: 220 18% 5%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 15% 15%;
+    --input: 220 15% 15%;
+    --ring: 42 55% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Global Button Overrides for "Oval" and "Lift" effect */
+  button,
+  .button,
+  .btn {
+    @apply rounded-full transition-all duration-500 !important;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  button:hover,
+  .button:hover,
+  .btn:hover {
+    @apply -translate-y-1.5 shadow-xl shadow-accent/25 !important;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Oswald', sans-serif;
+    @apply font-semibold tracking-wide uppercase;
+  }
+}
+
+@layer components {
+  .gold-divider {
+    @apply h-px bg-gradient-to-r from-transparent via-accent to-transparent;
+  }
+
+  .section-padding {
+    @apply py-16 md:py-24 px-4 md:px-8;
+  }
+
+  .heading-display {
+    font-family: 'Oswald', sans-serif;
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-wider uppercase;
+  }
+
+  .heading-section {
+    font-family: 'Oswald', sans-serif;
+    @apply text-2xl md:text-3xl lg:text-4xl font-semibold tracking-wide uppercase;
+  }
+
+  .text-gold {
+    @apply text-accent;
+  }
+
+  .bg-charcoal-light {
+    background-color: #0F0F0F;
+    background-image:
+      radial-gradient(circle at 15% 50%, rgba(220, 38, 38, 0.08), transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(202, 138, 4, 0.05), transparent 25%);
+    color: #F8F9FA;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.5s ease-out forwards;
+  }
+
+  .animate-line-reveal {
+    animation: lineReveal 0.8s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes lineReveal {
+    from {
+      transform: scaleX(0);
+    }
+
+    to {
+      transform: scaleX(1);
+    }
+  }
+}
