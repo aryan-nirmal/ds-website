@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { FileText, Upload, Trash2, Download, Loader2 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { FileText, Upload, Trash2, Download, Loader2, Plus, X, Edit2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 
@@ -15,6 +18,12 @@ interface Magazine {
 const MagazineManagement = () => {
   const [magazines, setMagazines] = useState<Magazine[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [newTitle, setNewTitle] = useState("");
+  const [startFile, setSelectedFile] = useState<File | null>(null);
+
+  const [editingId, setEditingId] = useState<number | null>(null);
 
   useEffect(() => {
     fetchMagazines();
@@ -37,28 +46,94 @@ const MagazineManagement = () => {
     }
   };
 
-  const handleUpload = async () => {
-    // Simplified for demo: Just creating a draft record
-    // Real impl would have file upload similar to Gallery
-    const title = prompt("Magazine Title:");
-    if (!title) return;
+  const handleOpenAuthDialog = (mag?: Magazine) => {
+    if (mag) {
+      setEditingId(mag.id);
+      setNewTitle(mag.title);
+    } else {
+      setEditingId(null);
+      setNewTitle("");
+      setSelectedFile(null);
+    }
+    setIsDialogOpen(true);
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
+  const handleUploadSubmit = async () => {
+    if (!newTitle) {
+      toast.error("Please provide a title");
+      return;
+    }
+
+    if (!editingId && !startFile) {
+      toast.error("Please provide a PDF file");
+      return;
+    }
 
     try {
-      const { data, error } = await supabase
-        .from('magazines')
-        .insert([{
-          title,
-          month: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
-          status: "Draft"
-        }])
-        .select()
-        .single();
+      setUploading(true);
 
-      if (error) throw error;
-      setMagazines([data, ...magazines]);
-      toast.success("Magazine draft created");
+      if (editingId) {
+        // Update Mode
+        const { error } = await supabase
+          .from('magazines')
+          .update({ title: newTitle })
+          .eq('id', editingId);
+
+        if (error) throw error;
+
+        setMagazines(magazines.map(m => m.id === editingId ? { ...m, title: newTitle } : m));
+        toast.success("Magazine updated successfully");
+      } else {
+        // Create Mode
+        if (!startFile) return;
+
+        // 1. Upload PDF
+        const fileExt = startFile.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('documents')
+          .upload(filePath, startFile);
+
+        if (uploadError) throw uploadError;
+
+        // 2. Get Public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from('documents')
+          .getPublicUrl(filePath);
+
+        // 3. Insert Record
+        const { data, error: dbError } = await supabase
+          .from('magazines')
+          .insert([{
+            title: newTitle,
+            month: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+            status: "Draft",
+            pdf_url: publicUrl
+          }])
+          .select()
+          .single();
+
+        if (dbError) throw dbError;
+
+        setMagazines([data, ...magazines]);
+        toast.success("Magazine uploaded successfully");
+      }
+
+      setIsDialogOpen(false);
+      setNewTitle("");
+      setSelectedFile(null);
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message || "Error processing request");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -103,13 +178,68 @@ const MagazineManagement = () => {
           <h2 className="text-2xl font-heading text-white mb-1">Magazine Management</h2>
           <p className="text-neutral-400 text-sm">Upload monthly Defence Digest PDFs</p>
         </div>
-        <Button
-          className="bg-accent text-accent-foreground hover:bg-accent/90"
-          onClick={handleUpload}
-        >
-          <Upload size={18} className="mr-2" />
-          Upload New Issue
-        </Button>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Button
+            className="bg-accent text-accent-foreground hover:bg-accent/90"
+            onClick={() => handleOpenAuthDialog()}
+          >
+            <Upload size={18} className="mr-2" />
+            Upload New Magazine
+          </Button>
+          <DialogContent className="bg-[#111] border-white/10 text-white sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>{editingId ? "Edit Magazine" : "Upload Defence Digest"}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="title" className="text-neutral-300">Issue Title</Label>
+                <Input
+                  id="title"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  placeholder="e.g. January 2024 Edition"
+                  className="bg-black/50 border-white/10 text-white placeholder:text-neutral-500 focus-visible:ring-accent"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="pdf" className="text-neutral-300">
+                  {editingId ? "Replace PDF (Optional)" : "PDF File"}
+                </Label>
+                <Input
+                  id="pdf"
+                  type="file"
+                  accept=".pdf"
+                  onChange={handleFileSelect}
+                  className="bg-black/50 border-white/10 text-white file:bg-white/10 file:text-white file:border-0 hover:file:bg-white/20 cursor-pointer"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setIsDialogOpen(false)}
+                className="border-white/10 text-neutral-300 hover:text-white hover:bg-white/5"
+                disabled={uploading}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleUploadSubmit}
+                className="bg-accent text-accent-foreground hover:bg-accent/90"
+                disabled={uploading}
+              >
+                {uploading ? (
+                  <>
+                    <Loader2 size={16} className="mr-2 animate-spin" />
+                    {editingId ? "Updating..." : "Uploading..."}
+                  </>
+                ) : (
+                  editingId ? "Save Changes" : "Upload"
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {loading ? (
@@ -142,8 +272,8 @@ const MagazineManagement = () => {
                   <td className="p-4">
                     <span
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium cursor-pointer ${mag.status === "Published" ? "bg-green-900/30 text-green-400" :
-                          mag.status === "Draft" ? "bg-yellow-900/30 text-yellow-400" :
-                            "bg-neutral-800 text-neutral-400"
+                        mag.status === "Draft" ? "bg-yellow-900/30 text-yellow-400" :
+                          "bg-neutral-800 text-neutral-400"
                         }`}
                       onClick={() => handleStatusToggle(mag)}
                     >
@@ -158,8 +288,17 @@ const MagazineManagement = () => {
                       <Button
                         size="sm"
                         variant="ghost"
+                        className="h-8 text-neutral-400 hover:text-white"
+                        title="Edit Name"
+                        onClick={() => handleOpenAuthDialog(mag)}
+                      >
+                        <Edit2 size={16} />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
                         className="h-8 text-neutral-400 hover:text-blue-400"
-                        title="Update"
+                        title="Update Status"
                         onClick={() => handleStatusToggle(mag)}
                       >
                         <Upload size={16} />

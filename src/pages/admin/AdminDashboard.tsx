@@ -7,32 +7,40 @@ import {
   Shield,
   LogOut,
   Menu,
-  X
+  X,
+  Globe,
+  Trophy
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthProvider";
 
 const sidebarItems = [
-  { name: "Dashboard", path: "/admin", icon: LayoutDashboard },
+  { name: "Back to Website", path: "/", icon: Globe },
   { name: "Manage Gallery", path: "/admin/gallery", icon: Image },
   { name: "Manage Courses", path: "/admin/courses", icon: BookOpen },
   { name: "Manage Magazines", path: "/admin/magazines", icon: FileText },
-  { name: "Permissions", path: "/admin/permissions", icon: Shield },
+  { name: "Hall of Fame", path: "/admin/hall-of-fame", icon: Trophy },
+  { name: "User Permissions", path: "/admin/permissions", icon: Shield },
 ];
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
+  const { signOut, user, isAdmin, loading } = useAuth();
 
   useEffect(() => {
-    const isAdmin = localStorage.getItem("isAdmin");
-    if (!isAdmin) {
-      navigate("/login/admin");
+    // If not loading and not authenticated as admin, redirect
+    if (!loading) {
+      if (!user || !isAdmin) {
+        navigate("/login");
+      }
     }
-  }, [navigate]);
+  }, [user, isAdmin, loading, navigate]);
 
-  if (!localStorage.getItem("isAdmin")) return null;
+  if (loading) return null; // Or a spinner
+  if (!isAdmin) return null;
 
   return (
     <div className="min-h-screen bg-black flex">
@@ -48,6 +56,14 @@ const AdminDashboard = () => {
           {/* Header */}
           <div className="h-16 flex items-center px-6 border-b border-white/10">
             <span className="font-heading text-lg tracking-wider text-white">ADMIN PANEL</span>
+          </div>
+
+          {/* User Info */}
+          <div className="p-4 border-b border-white/10">
+            <div className="bg-white/5 rounded-lg p-3 text-sm">
+              <p className="text-neutral-400 text-xs uppercase tracking-wider mb-1">Logged in as</p>
+              <p className="text-white font-medium truncate">{user?.email}</p>
+            </div>
           </div>
 
           {/* Nav */}
@@ -75,11 +91,13 @@ const AdminDashboard = () => {
 
           {/* Footer */}
           <div className="p-4 border-t border-white/10">
-            <Button variant="ghost" className="w-full justify-start text-neutral-400 hover:text-red-400 hover:bg-red-950/20" asChild>
-              <Link to="/login/admin" onClick={() => localStorage.removeItem("isAdmin")}>
-                <LogOut size={20} className="mr-3" />
-                Logout
-              </Link>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-neutral-400 hover:text-red-400 hover:bg-red-950/20"
+              onClick={() => signOut()}
+            >
+              <LogOut size={20} className="mr-3" />
+              Logout
             </Button>
           </div>
         </div>

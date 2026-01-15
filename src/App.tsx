@@ -3,70 +3,86 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import PublicLayout from "./components/Layout/PublicLayout";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Courses from "./pages/Courses";
 import StudentCorner from "./pages/StudentCorner";
+import Gallery from "./pages/Gallery";
 import Results from "./pages/Results";
-import Admissions from "./pages/Admissions";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
-import StudentLogin from "./pages/auth/StudentLogin";
-import StaffLogin from "./pages/auth/StaffLogin";
-import AdminLogin from "./pages/auth/AdminLogin";
-import LoginSelection from "./pages/LoginSelection";
+import LoginPage from "./pages/auth/LoginPage";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import PublicRoute from "./components/auth/PublicRoute";
+
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import GalleryManagement from "./pages/admin/GalleryManagement";
 import CoursesManagement from "./pages/admin/CoursesManagement";
 import MagazineManagement from "./pages/admin/MagazineManagement";
+import HallOfFameManagement from "./pages/admin/HallOfFameManagement";
 
 import PermissionsPanel from "./pages/admin/PermissionsPanel";
+
+import AdminWelcome from "./pages/admin/AdminWelcome";
+
 import { AuthProvider } from "./contexts/AuthProvider";
+import { useEffect } from "react";
+import { setCircularFavicon } from "./lib/faviconUtils";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/courses" element={<Courses />} />
-            <Route path="/student-corner" element={<StudentCorner />} />
-            <Route path="/results" element={<Results />} />
-            <Route path="/admissions" element={<Admissions />} />
-            <Route path="/contact" element={<Contact />} />
+const App = () => {
+  useEffect(() => {
+    setCircularFavicon('/logo.jpg');
+  }, []);
 
-            {/* Auth Routes */}
-            <Route path="/login" element={<LoginSelection />} />
-            <Route path="/login/student" element={<StudentLogin />} />
-            <Route path="/login/staff" element={<StaffLogin />} />
-            <Route path="/login/admin" element={<AdminLogin />} />
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              {/* Public Routes with Navbar & Footer */}
+              <Route element={<PublicLayout />}>
+                <Route path="/" element={<Index />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/courses" element={<Courses />} />
+                <Route path="/student-corner" element={<StudentCorner />} />
+                <Route path="/gallery" element={<GalleryManagement />} />
+                <Route path="/results" element={<Results />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/login" element={
+                  <PublicRoute>
+                    <LoginPage />
+                  </PublicRoute>
+                } />
+              </Route>
 
-            {/* Admin Dashboard */}
-            <Route path="/admin" element={<AdminDashboard />}>
-              <Route index element={<div className="text-white">Welcome to Admin Dashboard</div>} />
-              <Route path="gallery" element={<GalleryManagement />} />
-              <Route path="courses" element={<CoursesManagement />} />
-              <Route path="magazines" element={<MagazineManagement />} />
-              <Route path="permissions" element={<PermissionsPanel />} />
-            </Route>
+              {/* Admin Dashboard - No Public Navbar */}
+              <Route path="/admin" element={
+                <ProtectedRoute adminOnly={true}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }>
+                <Route index element={<AdminWelcome />} />
+                <Route path="gallery" element={<GalleryManagement />} />
+                <Route path="courses" element={<CoursesManagement />} />
+                <Route path="magazines" element={<MagazineManagement />} />
+                <Route path="hall-of-fame" element={<HallOfFameManagement />} />
+                <Route path="permissions" element={<PermissionsPanel />} />
+              </Route>
 
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Footer />
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
-  </QueryClientProvider>
-);
+              {/* Catch-all */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

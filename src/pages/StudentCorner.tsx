@@ -1,24 +1,9 @@
-import { Download, FileText, BookOpen, Newspaper, Calendar } from "lucide-react";
+import { Download, FileText, BookOpen, Newspaper, Calendar, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SectionHeading from "@/components/SectionHeading";
 import GoldDivider from "@/components/GoldDivider";
-
-const magazines = [
-  { title: "January 2024", topic: "NDA Preparation Strategy", pages: 48 },
-  { title: "December 2023", topic: "SSB Interview Insights", pages: 52 },
-  { title: "November 2023", topic: "Physical Fitness Guide", pages: 44 },
-  { title: "October 2023", topic: "Current Affairs Digest", pages: 40 },
-  { title: "September 2023", topic: "Mock Test Analysis", pages: 56 },
-  { title: "August 2023", topic: "Success Stories Special", pages: 48 },
-];
-
-const news = [
-  { title: "UPSC NDA II 2024 Notification Released", date: "15 Jan 2024", category: "NDA" },
-  { title: "CDS 2024 Application Window Opens", date: "10 Jan 2024", category: "CDS" },
-  { title: "Sainik School Entrance Exam Dates Announced", date: "05 Jan 2024", category: "SPI" },
-  { title: "SSB Interview Tips from Selection Board Veterans", date: "28 Dec 2023", category: "SSB" },
-  { title: "Physical Fitness Standards Updated for 2024", date: "20 Dec 2023", category: "General" },
-];
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 const examPatterns = [
   {
@@ -51,6 +36,50 @@ const examPatterns = [
 ];
 
 const StudentCorner = () => {
+  const { data: magazines = [], isLoading: loadingMagazines } = useQuery({
+    queryKey: ['magazines'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('magazines')
+        .select('*')
+        .eq('status', 'Published')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const { data: news = [], isLoading: loadingNews } = useQuery({
+    queryKey: ['news'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('defence_news')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const { data: syllabus = [], isLoading: loadingSyllabus } = useQuery({
+    queryKey: ['syllabus'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('syllabus_downloads')
+        .select('*')
+        .order('created_at', { ascending: true });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  if (loadingMagazines || loadingNews || loadingSyllabus) {
+    return (
+      <div className="min-h-screen flex items-center justify-center pt-20">
+        <Loader2 className="w-8 h-8 text-accent animate-spin" />
+      </div>
+    );
+  }
   return (
     <main className="pt-16 md:pt-20 pb-20 lg:pb-0">
       {/* Hero */}
@@ -61,7 +90,7 @@ const StudentCorner = () => {
               STUDENT <span className="text-accent">CORNER</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Your comprehensive resource hub for magazines, defence news, 
+              Your comprehensive resource hub for magazines, defence news,
               exam patterns, and study materials.
             </p>
           </div>
@@ -73,15 +102,15 @@ const StudentCorner = () => {
       {/* Magazine Archive */}
       <section className="section-padding">
         <div className="container mx-auto">
-          <SectionHeading 
-            title="Magazine Archive" 
+          <SectionHeading
+            title="Magazine Archive"
             subtitle="Monthly editions of Defence Digest with exam strategies and current affairs"
           />
-          
+
           {/* CMS: Magazine */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {magazines.map((magazine, index) => (
-              <div 
+              <div
                 key={index}
                 className="bg-card border border-border hover:border-accent/50 transition-all duration-300 overflow-hidden"
               >
@@ -112,14 +141,14 @@ const StudentCorner = () => {
       {/* Defence News */}
       <section className="section-padding bg-card">
         <div className="container mx-auto">
-          <SectionHeading 
-            title="Defence News" 
+          <SectionHeading
+            title="Defence News"
             subtitle="Latest updates on examinations, notifications, and defence sector"
           />
-          
+
           <div className="max-w-4xl mx-auto space-y-4">
             {news.map((item, index) => (
-              <div 
+              <div
                 key={index}
                 className="bg-background border border-border p-4 md:p-6 hover:border-accent/50 transition-colors flex flex-col md:flex-row md:items-center gap-4"
               >
@@ -154,14 +183,14 @@ const StudentCorner = () => {
       {/* Exam Patterns */}
       <section className="section-padding">
         <div className="container mx-auto">
-          <SectionHeading 
-            title="Exam Patterns" 
+          <SectionHeading
+            title="Exam Patterns"
             subtitle="Understand the structure and marking scheme of each examination"
           />
-          
+
           <div className="space-y-8">
             {examPatterns.map((exam, index) => (
-              <div 
+              <div
                 key={index}
                 className="bg-card border border-border overflow-hidden"
               >
@@ -211,18 +240,18 @@ const StudentCorner = () => {
       {/* Syllabus Downloads */}
       <section className="section-padding bg-card">
         <div className="container mx-auto">
-          <SectionHeading 
-            title="Syllabus Downloads" 
+          <SectionHeading
+            title="Syllabus Downloads"
             subtitle="Complete syllabi for all defence examinations"
           />
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {[
               { name: "NDA Syllabus 2024", size: "2.4 MB" },
               { name: "CDS Syllabus 2024", size: "1.8 MB" },
               { name: "Sainik School Syllabus", size: "1.2 MB" },
             ].map((file, index) => (
-              <div 
+              <div
                 key={index}
                 className="bg-background border border-border p-6 text-center hover:border-accent/50 transition-colors"
               >

@@ -4,22 +4,54 @@ import { Button } from "@/components/ui/button";
 import SectionHeading from "@/components/SectionHeading";
 import GoldDivider from "@/components/GoldDivider";
 
+const eligibilityCriteria = [
+  {
+    program: "SPI Foundation",
+    criteria: [
+      "Students in Class 5 (for Class 6 entry) or Class 8 (for Class 9 entry)",
+      "Age as per Sainik School admission norms",
+      "Indian nationality",
+      "Basic proficiency in English and Mathematics"
+    ]
+  },
+  {
+    program: "NDA Core",
+    criteria: [
+      "12th Pass or appearing (any stream)",
+      "Age: 16.5 to 19.5 years",
+      "Unmarried male/female candidates",
+      "Physically fit as per NDA medical standards"
+    ]
+  },
+  {
+    program: "CDS Graduate Wing",
+    criteria: [
+      "Graduate from a recognized university",
+      "Age: 19 to 25 years (varies by entry type)",
+      "Unmarried candidates",
+      "Physically and mentally fit"
+    ]
+  }
+];
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     subject: "",
+    program: "",
+    qualification: "",
     message: ""
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Frontend only - form submission placeholder
-    alert("Thank you for your message. We'll respond within 24 hours.");
+    alert("Thank you for your inquiry. We'll be in touch within 24 hours.");
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -30,12 +62,46 @@ const Contact = () => {
         <div className="container mx-auto text-center">
           <div className="animate-fade-in-up">
             <h1 className="heading-display text-foreground mb-6">
-              CONTACT <span className="text-accent">US</span>
+              ADMISSIONS & <span className="text-accent">CONTACT</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Get in touch with our team for admissions, campus visits,
+              Ready to serve the nation? Get in touch for admissions, campus visits,
               or any queries about our programs.
             </p>
+          </div>
+        </div>
+      </section>
+
+      <GoldDivider />
+
+      {/* Eligibility Section (Imported from Admissions) */}
+      <section className="section-padding">
+        <div className="container mx-auto">
+          <SectionHeading
+            title="Eligibility Criteria"
+            subtitle="Requirements for admission to each program"
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {eligibilityCriteria.map((item, index) => (
+              <div
+                key={index}
+                className="bg-card border border-border p-6 hover:border-accent/50 transition-colors"
+              >
+                <h3 className="font-heading text-lg tracking-wide mb-4 pb-4 border-b border-border">
+                  {item.program}
+                </h3>
+                <ul className="space-y-3">
+                  {item.criteria.map((criterion, i) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground">
+                      {/* CheckCircle not imported, using custom dot or generic */}
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 shrink-0" />
+                      {criterion}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -113,7 +179,7 @@ const Contact = () => {
             {/* Contact Form */}
             <div>
               <form onSubmit={handleSubmit} className="bg-card border border-border p-6 md:p-8">
-                <h3 className="font-heading text-xl tracking-wide mb-6">SEND US A MESSAGE</h3>
+                <h3 className="font-heading text-xl tracking-wide mb-6">ADMISSION INQUIRY & CONTACT</h3>
 
                 <div className="space-y-5">
                   <div>
@@ -162,18 +228,39 @@ const Contact = () => {
                     </div>
                   </div>
 
+                  {/* Program Selection - Merged from Admissions */}
                   <div>
                     <label className="block text-sm font-heading tracking-wide mb-2">
-                      Subject *
+                      Subject / Program of Interest *
+                    </label>
+                    <select
+                      name="program"
+                      value={formData.program}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground"
+                    >
+                      <option value="">Select an option</option>
+                      <option value="spi">Admission: SPI Foundation (Class 6/9)</option>
+                      <option value="nda">Admission: NDA Core (After 10th/12th)</option>
+                      <option value="cds">Admission: CDS Graduate Wing</option>
+                      <option value="general">General Inquiry / Other</option>
+                      <option value="visit">Schedule Campus Visit</option>
+                    </select>
+                  </div>
+
+                  {/* Qualification - Conditional or Optional */}
+                  <div>
+                    <label className="block text-sm font-heading tracking-wide mb-2">
+                      Current Qualification
                     </label>
                     <input
                       type="text"
-                      name="subject"
-                      value={formData.subject}
+                      name="qualification"
+                      value={formData.qualification}
                       onChange={handleChange}
-                      required
                       className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground"
-                      placeholder="What is this regarding?"
+                      placeholder="e.g. Class 10th Student, graduate (Optional)"
                     />
                   </div>
 
@@ -186,14 +273,14 @@ const Contact = () => {
                       value={formData.message}
                       onChange={handleChange}
                       required
-                      rows={5}
+                      rows={4}
                       className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground resize-none"
                       placeholder="Type your message here..."
                     />
                   </div>
 
                   <Button type="submit" variant="command" size="lg" className="w-full">
-                    Send Message
+                    Send Inquiry
                     <ChevronRight size={18} />
                   </Button>
                 </div>
@@ -225,25 +312,6 @@ const Contact = () => {
               referrerPolicy="no-referrer-when-downgrade"
             ></iframe>
           </div>
-        </div>
-      </section>
-
-      <GoldDivider />
-
-      {/* Schedule Visit CTA */}
-      <section className="section-padding">
-        <div className="container mx-auto text-center">
-          <h2 className="heading-section text-foreground mb-4">
-            SCHEDULE A CAMPUS VISIT
-          </h2>
-          <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Experience our facilities first-hand. Book a campus tour and meet our faculty
-            to understand how we can help you achieve your defence career goals.
-          </p>
-          <Button variant="command" size="lg">
-            Book Campus Tour
-            <ChevronRight size={18} />
-          </Button>
         </div>
       </section>
     </main>

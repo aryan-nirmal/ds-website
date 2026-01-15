@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthProvider";
 
 const navLinks = [
   { name: "Home", path: "/" },
@@ -9,11 +10,11 @@ const navLinks = [
   { name: "Courses", path: "/courses" },
   { name: "Student Corner", path: "/student-corner" },
   { name: "Hall of Fame", path: "/results" },
-  { name: "Admissions", path: "/admissions" },
   { name: "Contact", path: "/contact" },
 ];
 
 const Navbar = () => {
+  const { user, signOut, isAdmin } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
@@ -100,11 +101,37 @@ const Navbar = () => {
             {/* Desktop CTA & Login */}
             <div className="hidden lg:flex items-center gap-4 ml-auto">
               <div className="h-6 w-px bg-white/10" /> {/* Divider */}
-              <Link to="/login" className="text-xs font-heading text-neutral-400 hover:text-white transition-colors uppercase tracking-wider">
-                Login
-              </Link>
+
+              {user ? (
+                <div className="flex items-center gap-4">
+                  {isAdmin ? (
+                    <Button variant="outline" size="sm" asChild className="border-accent text-accent hover:bg-accent hover:text-white transition-colors">
+                      <Link to="/admin">
+                        Admin Panel
+                      </Link>
+                    </Button>
+                  ) : (
+                    <span className="text-xs font-heading text-white uppercase tracking-wider">
+                      Student
+                    </span>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => signOut()}
+                    className="text-xs font-heading text-neutral-400 hover:text-red-400 transition-colors uppercase tracking-wider hover:bg-transparent"
+                  >
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <Link to="/login" className="text-xs font-heading text-neutral-400 hover:text-white transition-colors uppercase tracking-wider">
+                  Login
+                </Link>
+              )}
+
               <Button variant="command" size="sm" asChild className="rounded-full shadow-lg hover:shadow-accent/20 transition-all duration-300">
-                <Link to="/admissions">Apply Now</Link>
+                <Link to="/contact">Apply Now</Link>
               </Button>
             </div>
 
@@ -138,15 +165,27 @@ const Navbar = () => {
                   </Link>
                 ))}
                 <div className="pt-2 mt-2 border-t border-white/10 flex flex-col gap-3">
-                  <Link
-                    to="/login/student"
-                    className="block px-4 py-3 text-center rounded-full bg-white/5 text-neutral-300 hover:text-white hover:bg-white/10 transition-colors font-heading text-sm tracking-wider uppercase"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Student Login
-                  </Link>
+                  {user ? (
+                    <button
+                      onClick={() => {
+                        signOut();
+                        setIsOpen(false);
+                      }}
+                      className="block w-full px-4 py-3 text-center rounded-full bg-red-900/10 text-red-400 hover:bg-red-900/20 transition-colors font-heading text-sm tracking-wider uppercase"
+                    >
+                      Logout
+                    </button>
+                  ) : (
+                    <Link
+                      to="/login"
+                      className="block px-4 py-3 text-center rounded-full bg-white/5 text-neutral-300 hover:text-white hover:bg-white/10 transition-colors font-heading text-sm tracking-wider uppercase"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Login
+                    </Link>
+                  )}
                   <Button variant="command" className="w-full rounded-full" asChild>
-                    <Link to="/admissions" onClick={() => setIsOpen(false)}>
+                    <Link to="/contact" onClick={() => setIsOpen(false)}>
                       Apply Now
                     </Link>
                   </Button>
@@ -161,7 +200,7 @@ const Navbar = () => {
       <div className="fixed bottom-4 left-4 right-4 z-40 lg:hidden user-select-none pointer-events-none">
         <div className="pointer-events-auto">
           <Button variant="command" className="w-full rounded-full shadow-lg shadow-black/50 backdrop-blur-md" asChild>
-            <Link to="/admissions">Apply For Admission</Link>
+            <Link to="/contact">Apply For Admission</Link>
           </Button>
         </div>
       </div>

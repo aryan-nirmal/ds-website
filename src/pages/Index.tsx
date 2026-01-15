@@ -1,10 +1,54 @@
 import { Link } from "react-router-dom";
-import { Shield, Target, Users, Award, BookOpen, ChevronRight, Star } from "lucide-react";
+import { Shield, Target, Users, Award, BookOpen, ChevronRight, Star, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SectionHeading from "@/components/SectionHeading";
 import GoldDivider from "@/components/GoldDivider";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 const Index = () => {
+  // Fetch Courses
+  const { data: courses, isLoading: coursesLoading } = useQuery({
+    queryKey: ['home-courses'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('courses')
+        .select('*')
+        .limit(3);
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  // Fetch Hall of Fame
+  const { data: hallOfFame, isLoading: hofLoading } = useQuery({
+    queryKey: ['home-hall-of-fame'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('hall_of_fame')
+        .select('*')
+        .limit(4)
+        .order('id', { ascending: false });
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  // Fetch Magazines
+  const { data: magazines, isLoading: magazinesLoading } = useQuery({
+    queryKey: ['home-magazines'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('magazines')
+        .select('*')
+        .eq('status', 'Published')
+        .limit(3)
+        .order('id', { ascending: false });
+      if (error) throw error;
+      return data;
+    }
+  });
+
   return (
     <main className="pt-16 md:pt-20 pb-20 lg:pb-0">
       {/* Hero Section */}
@@ -15,10 +59,6 @@ const Index = () => {
 
         <div className="container mx-auto px-4 py-20 md:py-32 relative z-10 text-center">
           <div className="animate-fade-in-up">
-            {/* <div className="inline-flex items-center gap-2 px-4 py-2 bg-muted/50 border border-border rounded mb-8">
-              <Shield size={18} className="text-accent" />
-              <span className="text-sm text-muted-foreground tracking-wide">PREMIER DEFENCE PREPARATION INSTITUTE</span>
-            </div> */ }
             <div className="mb-16"></div>
 
             <h1 className="heading-display text-foreground mb-6 leading-tight">
@@ -33,7 +73,7 @@ const Index = () => {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button variant="command" size="lg" asChild>
-                <Link to="/admissions">
+                <Link to="/contact">
                   Apply for Admission
                   <ChevronRight size={20} />
                 </Link>
@@ -106,45 +146,36 @@ const Index = () => {
             subtitle="Structured training programs designed for each defence examination"
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {[
-              {
-                title: "SPI Foundation",
-                subtitle: "Sainik School Entrance",
-                description: "Comprehensive preparation for Sainik School entrance examinations with focus on academics and personality development.",
-                duration: "12 Months"
-              },
-              {
-                title: "NDA Core",
-                subtitle: "National Defence Academy",
-                description: "Intensive training for NDA written examination and SSB interview with physical fitness programs.",
-                duration: "18 Months"
-              },
-              {
-                title: "CDS Graduate Wing",
-                subtitle: "Combined Defence Services",
-                description: "Specialized coaching for graduates aspiring to join the Indian Armed Forces through CDS examination.",
-                duration: "12 Months"
-              }
-            ].map((course, index) => (
-              <div
-                key={index}
-                className="group bg-background border border-border hover:border-accent/50 transition-all duration-300 overflow-hidden"
-              >
-                <div className="h-2 bg-gradient-to-r from-accent/50 via-accent to-accent/50" />
-                <div className="p-6">
-                  <span className="text-xs text-accent tracking-wider uppercase">{course.subtitle}</span>
-                  <h3 className="font-heading text-xl tracking-wide mt-1 mb-3">{course.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-4">{course.description}</p>
-                  <div className="flex items-center justify-between pt-4 border-t border-border">
-                    <span className="text-xs text-muted-foreground">Duration: {course.duration}</span>
-                    <Button variant="link" size="sm" className="p-0" asChild>
-                      <Link to="/courses">Learn More →</Link>
-                    </Button>
+          {coursesLoading ? (
+            <div className="flex justify-center py-12"><Loader2 className="animate-spin text-accent" /></div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+              {courses?.map((course: any, index: number) => (
+                <div
+                  key={index}
+                  className="group bg-background border border-border hover:border-accent/50 transition-all duration-300 overflow-hidden"
+                >
+                  <div className="h-2 bg-gradient-to-r from-accent/50 via-accent to-accent/50" />
+                  <div className="p-6">
+                    <span className="text-xs text-accent tracking-wider uppercase">{course.subtitle || "Defence Course"}</span>
+                    <h3 className="font-heading text-xl tracking-wide mt-1 mb-3">{course.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4 line-clamp-3">{course.description}</p>
+                    <div className="flex items-center justify-between pt-4 border-t border-border">
+                      <span className="text-xs text-muted-foreground">Duration: {course.duration}</span>
+                      <Button variant="link" size="sm" className="p-0" asChild>
+                        <Link to="/courses">Learn More →</Link>
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          )}
+
+          <div className="text-center mt-12">
+            <Button variant="outline" asChild>
+              <Link to="/courses">View All Programs</Link>
+            </Button>
           </div>
         </div>
       </section>
@@ -159,31 +190,36 @@ const Index = () => {
             subtitle="Our cadets who have earned their place in the defence services"
           />
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
-            {[
-              { name: "Cadet Arjun Singh", rank: "AIR 23", exam: "NDA 2024", branch: "Indian Army" },
-              { name: "Cadet Priya Sharma", rank: "AIR 45", exam: "CDS 2024", branch: "Indian Air Force" },
-              { name: "Cadet Vikram Reddy", rank: "AIR 12", exam: "NDA 2023", branch: "Indian Navy" },
-              { name: "Cadet Ananya Patel", rank: "AIR 8", exam: "CDS 2023", branch: "Indian Army" },
-            ].map((student, index) => (
-              <div
-                key={index}
-                className="group bg-card border border-border p-4 hover:border-accent/50 transition-all duration-300"
-              >
-                <div className="w-16 h-16 bg-muted mx-auto mb-3 flex items-center justify-center">
-                  <Star size={24} className="text-accent" />
+          {hofLoading ? (
+            <div className="flex justify-center py-12"><Loader2 className="animate-spin text-accent" /></div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
+              {hallOfFame?.map((student: any, index: number) => (
+                <div
+                  key={index}
+                  className="group bg-card border border-border p-4 hover:border-accent/50 transition-all duration-300"
+                >
+                  <div className="w-16 h-16 bg-muted mx-auto mb-3 flex items-center justify-center overflow-hidden rounded-full border border-white/10">
+                    {student.image_url ? (
+                      <img src={student.image_url} alt={student.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <Star size={24} className="text-accent" />
+                    )}
+                  </div>
+                  <div className="text-center">
+                    {student.rank && (
+                      <span className="inline-block px-2 py-1 text-xs font-heading bg-accent text-accent-foreground mb-2">
+                        {student.rank}
+                      </span>
+                    )}
+                    <h4 className="font-heading text-sm tracking-wide mb-1">{student.name}</h4>
+                    <p className="text-xs text-muted-foreground">{student.exam}</p>
+                    <p className="text-xs text-accent mt-1">{student.branch}</p>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <span className="inline-block px-2 py-1 text-xs font-heading bg-accent text-accent-foreground mb-2">
-                    {student.rank}
-                  </span>
-                  <h4 className="font-heading text-sm tracking-wide mb-1">{student.name}</h4>
-                  <p className="text-xs text-muted-foreground">{student.exam}</p>
-                  <p className="text-xs text-accent mt-1">{student.branch}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           <div className="text-center mt-8">
             <Button variant="outline" asChild>
@@ -203,25 +239,31 @@ const Index = () => {
             subtitle="Stay updated with our monthly magazine covering defence news and exam strategies"
           />
 
-          {/* CMS: Magazine */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { title: "January 2024 Edition", topic: "NDA Preparation Strategy" },
-              { title: "December 2023 Edition", topic: "SSB Interview Insights" },
-              { title: "November 2023 Edition", topic: "Physical Fitness Guide" },
-            ].map((magazine, index) => (
-              <div
-                key={index}
-                className="bg-background border border-border p-6 hover:border-accent/50 transition-all duration-300"
-              >
-                <div className="aspect-[3/4] bg-muted mb-4 flex items-center justify-center">
-                  <BookOpen size={48} className="text-muted-foreground" />
+          {magazinesLoading ? (
+            <div className="flex justify-center py-12"><Loader2 className="animate-spin text-accent" /></div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {magazines?.map((magazine: any, index: number) => (
+                <div
+                  key={index}
+                  className="bg-background border border-border p-6 hover:border-accent/50 transition-all duration-300"
+                >
+                  <div className="aspect-[3/4] bg-muted mb-4 flex items-center justify-center relative overflow-hidden group">
+                    {/* If we had a cover image, we'd show it here. For now default icon */}
+                    <BookOpen size={48} className="text-muted-foreground group-hover:scale-110 transition-transform duration-500" />
+                  </div>
+                  <h4 className="font-heading text-sm tracking-wide mb-1">{magazine.title}</h4>
+                  <p className="text-xs text-muted-foreground">{magazine.month}</p>
+
+                  {magazine.pdf_url && (
+                    <Button variant="link" size="sm" className="p-0 mt-2 h-auto text-accent" asChild>
+                      <a href={magazine.pdf_url} target="_blank" rel="noopener noreferrer">Read Issue →</a>
+                    </Button>
+                  )}
                 </div>
-                <h4 className="font-heading text-sm tracking-wide mb-1">{magazine.title}</h4>
-                <p className="text-xs text-muted-foreground">{magazine.topic}</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           <div className="text-center mt-8">
             <Button variant="outline" asChild>
@@ -246,7 +288,7 @@ const Index = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button variant="command" size="lg" asChild>
-                <Link to="/admissions">
+                <Link to="/contact">
                   Start Your Application
                   <ChevronRight size={20} />
                 </Link>

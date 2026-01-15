@@ -8,6 +8,7 @@ interface AuthContextType {
   profile: any | null;
   isAdmin: boolean;
   loading: boolean;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -15,7 +16,8 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   profile: null,
   isAdmin: false,
-  loading: true
+  loading: true,
+  signOut: async () => { },
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -71,8 +73,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const isAdmin = profile?.role === 'admin';
 
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    setSession(null);
+    setProfile(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, session, profile, isAdmin, loading }}>
+    <AuthContext.Provider value={{ user, session, profile, isAdmin, loading, signOut }}>
       {children}
     </AuthContext.Provider>
   );

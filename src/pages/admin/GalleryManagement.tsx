@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Image, Trash2, Upload, Plus, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -49,14 +49,14 @@ const GalleryManagement = () => {
     try {
       // 1. Upload to Storage
       const { error: uploadError } = await supabase.storage
-        .from('gallery')
+        .from('Gallery')
         .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
       // 2. Get Public URL
       const { data: { publicUrl } } = supabase.storage
-        .from('gallery')
+        .from('Gallery')
         .getPublicUrl(filePath);
 
       // 3. Insert into Database
@@ -94,6 +94,12 @@ const GalleryManagement = () => {
     }
   };
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleTriggerUpload = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -101,24 +107,22 @@ const GalleryManagement = () => {
           <h2 className="text-2xl font-heading text-white mb-1">Gallery Management</h2>
           <p className="text-neutral-400 text-sm">Upload and manage campus photos</p>
         </div>
-        <div className="relative">
+        <div>
           <input
             type="file"
             accept="image/*"
             className="hidden"
-            id="gallery-upload"
+            ref={fileInputRef}
             onChange={handleUpload}
             disabled={uploading}
           />
           <Button
             className="bg-accent text-accent-foreground hover:bg-accent/90"
-            asChild
+            onClick={handleTriggerUpload}
             disabled={uploading}
           >
-            <label htmlFor="gallery-upload" className="cursor-pointer">
-              {uploading ? <Loader2 size={18} className="mr-2 animate-spin" /> : <Plus size={18} className="mr-2" />}
-              {uploading ? "Uploading..." : "Add New Image"}
-            </label>
+            {uploading ? <Loader2 size={18} className="mr-2 animate-spin" /> : <Plus size={18} className="mr-2" />}
+            {uploading ? "Uploading..." : "Add New Image"}
           </Button>
         </div>
       </div>
