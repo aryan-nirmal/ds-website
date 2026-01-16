@@ -141,7 +141,7 @@ const Navbar = () => {
             <div className="lg:hidden ml-auto">
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="p-2 text-foreground hover:text-accent transition-colors bg-white/5 rounded-full"
+                className="p-3 text-foreground hover:text-accent transition-colors bg-white/5 rounded-full"
                 aria-label="Toggle menu"
               >
                 {isOpen ? <X size={24} /> : <Menu size={24} />}

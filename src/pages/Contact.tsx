@@ -47,8 +47,30 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Frontend only - form submission placeholder
-    alert("Thank you for your inquiry. We'll be in touch within 24 hours.");
+
+    // Format the message for WhatsApp
+    const message = `*New Admission Inquiry*
+
+*Name:* ${formData.name}
+
+*Email:* ${formData.email}
+
+*Phone:* ${formData.phone}
+
+*Program:* ${formData.program}
+
+*Qualification:* ${formData.qualification}
+
+*Message:*
+${formData.message}`;
+
+    // Encode the message and create the WhatsApp URL
+    // Phone number: 918275949065
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/918275949065?text=${encodedMessage}`;
+
+    // Open WhatsApp in a new tab
+    window.open(whatsappUrl, '_blank');
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -192,7 +214,7 @@ const Contact = () => {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground rounded-full"
+                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground rounded-full text-base"
                       placeholder="Enter your full name"
                     />
                   </div>
@@ -208,7 +230,7 @@ const Contact = () => {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground rounded-full"
+                        className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground rounded-full text-base"
                         placeholder="your.email@example.com"
                       />
                     </div>
@@ -222,7 +244,7 @@ const Contact = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground rounded-full"
+                        className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground rounded-full text-base"
                         placeholder="+91 XXXXX XXXXX"
                       />
                     </div>
@@ -238,7 +260,7 @@ const Contact = () => {
                       value={formData.program}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground rounded-full appearance-none"
+                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground rounded-full appearance-none text-base"
                     >
                       <option value="">Select an option</option>
                       <option value="spi">Admission: SPI Foundation (Class 6/9)</option>
@@ -259,7 +281,7 @@ const Contact = () => {
                       name="qualification"
                       value={formData.qualification}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground rounded-full"
+                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground rounded-full text-base"
                       placeholder="e.g. Class 10th Student, graduate (Optional)"
                     />
                   </div>
@@ -274,7 +296,7 @@ const Contact = () => {
                       onChange={handleChange}
                       required
                       rows={4}
-                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground resize-none rounded-2xl"
+                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground resize-none rounded-2xl text-base"
                       placeholder="Type your message here..."
                     />
                   </div>
