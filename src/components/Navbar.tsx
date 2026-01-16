@@ -198,14 +198,6 @@ const Navbar = () => {
         </nav>
       </div>
 
-      {/* Mobile Sticky CTA */}
-      <div className="fixed bottom-4 left-4 right-4 z-40 lg:hidden user-select-none pointer-events-none">
-        <div className="pointer-events-auto">
-          <Button variant="command" className="w-full rounded-full shadow-lg shadow-black/50 backdrop-blur-md" asChild>
-            <Link to="/contact">Apply For Admission</Link>
-          </Button>
-        </div>
-      </div>
     </>
   );
 };
