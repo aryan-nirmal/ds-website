@@ -15,32 +15,36 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthProvider";
 
+// Define sidebar items with allowed roles
 const sidebarItems = [
-  { name: "Back to Website", path: "/", icon: Globe },
-  { name: "Manage Gallery", path: "/admin/gallery", icon: Image },
-  { name: "Manage Courses", path: "/admin/courses", icon: BookOpen },
-  { name: "Manage Magazines", path: "/admin/magazines", icon: FileText },
-  { name: "Hall of Fame", path: "/admin/hall-of-fame", icon: Trophy },
-  { name: "User Permissions", path: "/admin/permissions", icon: Shield },
+  { name: "Back to Website", path: "/", icon: Globe, allowedRole: "all" },
+  { name: "Manage Gallery", path: "/admin/gallery", icon: Image, allowedRole: "all" },
+  { name: "Manage Courses", path: "/admin/courses", icon: BookOpen, allowedRole: "all" },
+  { name: "Manage Magazines", path: "/admin/magazines", icon: FileText, allowedRole: "all" },
+  { name: "Hall of Fame", path: "/admin/hall-of-fame", icon: Trophy, allowedRole: "all" },
+  { name: "User Permissions", path: "/admin/permissions", icon: Shield, allowedRole: "admin" },
 ];
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
-  const { signOut, user, isAdmin, loading } = useAuth();
+  const { signOut, user, profile, loading } = useAuth();
+  const isAdmin = profile?.role === 'admin';
+  const isStaff = profile?.role === 'staff';
+  const hasAccess = isAdmin || isStaff;
 
   useEffect(() => {
     // If not loading and not authenticated as admin, redirect
     if (!loading) {
-      if (!user || !isAdmin) {
+      if (!user || !hasAccess) {
         navigate("/login");
       }
     }
-  }, [user, isAdmin, loading, navigate]);
+  }, [user, hasAccess, loading, navigate]);
 
   if (loading) return null; // Or a spinner
-  if (!isAdmin) return null;
+  if (!hasAccess) return null;
 
   return (
     <div className="min-h-screen bg-black flex">
@@ -69,6 +73,9 @@ const AdminDashboard = () => {
           {/* Nav */}
           <nav className="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
             {sidebarItems.map((item) => {
+              // Filter logic: if allowedRole is 'admin' and user is not admin, skip
+              if (item.allowedRole === 'admin' && !isAdmin) return null;
+
               const isActive = location.pathname === item.path ||
                 (item.path !== "/admin" && location.pathname.startsWith(item.path));
               return (

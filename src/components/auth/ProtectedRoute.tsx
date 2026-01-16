@@ -4,11 +4,11 @@ import { Loader2 } from "lucide-react";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  adminOnly?: boolean;
+  allowedRoles?: string[];
 }
 
-const ProtectedRoute = ({ children, adminOnly = false }: ProtectedRouteProps) => {
-  const { user, loading, isAdmin } = useAuth();
+const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
+  const { user, loading, profile } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -24,8 +24,9 @@ const ProtectedRoute = ({ children, adminOnly = false }: ProtectedRouteProps) =>
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (adminOnly && !isAdmin) {
-    // User is logged in but not admin
+  // If allowedRoles is specified, check if user's role is in the list
+  if (allowedRoles && (!profile?.role || !allowedRoles.includes(profile.role))) {
+    // User is logged in but doesn't have the required role
     return <Navigate to="/" replace />;
   }
 

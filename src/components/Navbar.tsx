@@ -14,7 +14,9 @@ const navLinks = [
 ];
 
 const Navbar = () => {
-  const { user, signOut, isAdmin } = useAuth();
+  const { user, signOut, isAdmin, profile } = useAuth();
+  const isStaff = profile?.role === 'staff';
+  const hasAdminAccess = isAdmin || isStaff;
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
@@ -104,7 +106,7 @@ const Navbar = () => {
 
               {user ? (
                 <div className="flex items-center gap-4">
-                  {isAdmin ? (
+                  {hasAdminAccess ? (
                     <Button variant="outline" size="sm" asChild className="border-accent text-accent hover:bg-accent hover:text-white transition-colors">
                       <Link to="/admin">
                         Admin Panel

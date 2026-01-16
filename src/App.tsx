@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PublicLayout from "./components/Layout/PublicLayout";
@@ -44,6 +45,7 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
+          <SpeedInsights />
           <BrowserRouter>
             <ScrollToTop />
             <Routes>
@@ -64,8 +66,9 @@ const App = () => {
               </Route>
 
               {/* Admin Dashboard - No Public Navbar */}
+              {/* Common Admin/Staff Routes */}
               <Route path="/admin" element={
-                <ProtectedRoute adminOnly={true}>
+                <ProtectedRoute allowedRoles={['admin', 'staff']}>
                   <AdminDashboard />
                 </ProtectedRoute>
               }>
@@ -74,7 +77,13 @@ const App = () => {
                 <Route path="courses" element={<CoursesManagement />} />
                 <Route path="magazines" element={<MagazineManagement />} />
                 <Route path="hall-of-fame" element={<HallOfFameManagement />} />
-                <Route path="permissions" element={<PermissionsPanel />} />
+
+                {/* Admin Only Routes */}
+                <Route path="permissions" element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <PermissionsPanel />
+                  </ProtectedRoute>
+                } />
               </Route>
 
               {/* Catch-all */}

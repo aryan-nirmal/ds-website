@@ -76,7 +76,7 @@ const LoginPage = () => {
 
           toast.success("Welcome back!");
 
-          if (profile?.role === 'admin') {
+          if (profile?.role === 'admin' || profile?.role === 'staff') {
             navigate("/admin");
           } else {
             navigate("/");
