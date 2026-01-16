@@ -25,6 +25,7 @@ import HallOfFameManagement from "./pages/admin/HallOfFameManagement";
 import PermissionsPanel from "./pages/admin/PermissionsPanel";
 
 import AdminWelcome from "./pages/admin/AdminWelcome";
+import ScrollToTop from "./components/ScrollToTop";
 
 import { AuthProvider } from "./contexts/AuthProvider";
 import { useEffect } from "react";
@@ -44,6 +45,7 @@ const App = () => {
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <ScrollToTop />
             <Routes>
               {/* Public Routes with Navbar & Footer */}
               <Route element={<PublicLayout />}>
