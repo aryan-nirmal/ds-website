@@ -12,7 +12,7 @@ const Courses = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('courses')
-        .select('*')
+        .select('id, title, subtitle, description, duration, batch_size, eligibility, syllabus, features')
         .order('created_at', { ascending: true }); // Maintain order
 
       if (error) throw error;

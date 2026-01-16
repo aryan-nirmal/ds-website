@@ -17,7 +17,7 @@ const Results = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('hall_of_fame')
-        .select('*')
+        .select('id, name, rank, exam, branch, image_url, story')
         .order('created_at', { ascending: true });
 
       if (error) throw error;

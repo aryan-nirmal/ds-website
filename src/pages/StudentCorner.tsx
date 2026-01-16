@@ -41,7 +41,7 @@ const StudentCorner = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('magazines')
-        .select('*')
+        .select('id, title, topic, pages')
         .eq('status', 'Published')
         .order('created_at', { ascending: false });
       if (error) throw error;
@@ -54,8 +54,9 @@ const StudentCorner = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('defence_news')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .select('id, title, date, category')
+        .order('created_at', { ascending: false })
+        .limit(6);
       if (error) throw error;
       return data;
     },
@@ -66,7 +67,7 @@ const StudentCorner = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('syllabus_downloads')
-        .select('*')
+        .select('id, name, size')
         .order('created_at', { ascending: true });
       if (error) throw error;
       return data;
