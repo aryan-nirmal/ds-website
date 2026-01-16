@@ -50,14 +50,14 @@ const Index = () => {
   });
 
   return (
-    <main className="pt-16 md:pt-20 pb-20 lg:pb-0">
+    <main className="pb-20 lg:pb-0">
       {/* Hero Section */}
       <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-charcoal-light/70 to-background z-0" />
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1595760780346-f972eb49f094?q=80&w=2515&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-overlay z-0" />
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
 
-        <div className="container mx-auto px-4 py-20 md:py-32 relative z-10 text-center">
+        <div className="container mx-auto px-4 pt-32 pb-20 md:pt-40 md:pb-32 relative z-10 text-center">
           <div className="animate-fade-in-up">
             <div className="mb-16"></div>
 
@@ -123,9 +123,9 @@ const Index = () => {
             ].map((item, index) => (
               <div
                 key={index}
-                className="group p-6 bg-card border border-border hover:border-accent/50 transition-all duration-300"
+                className="group p-6 bg-card border border-border hover:border-accent/50 transition-all duration-300 rounded-3xl"
               >
-                <div className="w-12 h-12 bg-muted flex items-center justify-center mb-4 group-hover:bg-accent/10 transition-colors">
+                <div className="w-12 h-12 bg-muted flex items-center justify-center mb-4 group-hover:bg-accent/10 transition-colors rounded-full">
                   <item.icon size={24} className="text-accent" />
                 </div>
                 <h3 className="font-heading text-lg tracking-wide mb-2">{item.title}</h3>
@@ -153,7 +153,7 @@ const Index = () => {
               {courses?.map((course: any, index: number) => (
                 <div
                   key={index}
-                  className="group bg-background border border-border hover:border-accent/50 transition-all duration-300 overflow-hidden"
+                  className="group bg-background border border-border hover:border-accent/50 transition-all duration-300 overflow-hidden rounded-3xl"
                 >
                   <div className="h-2 bg-gradient-to-r from-accent/50 via-accent to-accent/50" />
                   <div className="p-6">
@@ -197,7 +197,7 @@ const Index = () => {
               {hallOfFame?.map((student: any, index: number) => (
                 <div
                   key={index}
-                  className="group bg-card border border-border p-4 hover:border-accent/50 transition-all duration-300"
+                  className="group bg-card border border-border p-4 hover:border-accent/50 transition-all duration-300 rounded-3xl"
                 >
                   <div className="w-16 h-16 bg-muted mx-auto mb-3 flex items-center justify-center overflow-hidden rounded-full border border-white/10">
                     {student.image_url ? (
@@ -208,7 +208,7 @@ const Index = () => {
                   </div>
                   <div className="text-center">
                     {student.rank && (
-                      <span className="inline-block px-2 py-1 text-xs font-heading bg-accent text-accent-foreground mb-2">
+                      <span className="inline-block px-2 py-1 text-xs font-heading bg-accent text-accent-foreground mb-2 rounded-full">
                         {student.rank}
                       </span>
                     )}
@@ -246,9 +246,9 @@ const Index = () => {
               {magazines?.map((magazine: any, index: number) => (
                 <div
                   key={index}
-                  className="bg-background border border-border p-6 hover:border-accent/50 transition-all duration-300"
+                  className="bg-background border border-border p-6 hover:border-accent/50 transition-all duration-300 rounded-3xl"
                 >
-                  <div className="aspect-[3/4] bg-muted mb-4 flex items-center justify-center relative overflow-hidden group">
+                  <div className="aspect-[3/4] bg-muted mb-4 flex items-center justify-center relative overflow-hidden group rounded-xl">
                     {/* If we had a cover image, we'd show it here. For now default icon */}
                     <BookOpen size={48} className="text-muted-foreground group-hover:scale-110 transition-transform duration-500" />
                   </div>

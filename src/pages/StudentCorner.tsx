@@ -49,32 +49,7 @@ const StudentCorner = () => {
     },
   });
 
-  const { data: news = [], isLoading: loadingNews } = useQuery({
-    queryKey: ['news'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('defence_news')
-        .select('id, title, date, category')
-        .order('created_at', { ascending: false })
-        .limit(6);
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  const { data: syllabus = [], isLoading: loadingSyllabus } = useQuery({
-    queryKey: ['syllabus'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('syllabus_downloads')
-        .select('id, name, size')
-        .order('created_at', { ascending: true });
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  if (loadingMagazines || loadingNews || loadingSyllabus) {
+  if (loadingMagazines) {
     return (
       <div className="min-h-screen flex items-center justify-center pt-20">
         <Loader2 className="w-8 h-8 text-accent animate-spin" />
@@ -82,17 +57,16 @@ const StudentCorner = () => {
     );
   }
   return (
-    <main className="pt-16 md:pt-20 pb-20 lg:pb-0">
+    <main className="pb-20 lg:pb-0">
       {/* Hero */}
-      <section className="section-padding bg-card">
+      <section className="pt-32 pb-16 md:pt-40 md:pb-24 px-4 md:px-8 bg-card">
         <div className="container mx-auto text-center">
           <div className="animate-fade-in-up">
             <h1 className="heading-display text-foreground mb-6">
               STUDENT <span className="text-accent">CORNER</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Your comprehensive resource hub for magazines, defence news,
-              exam patterns, and study materials.
+              Your comprehensive resource hub for magazines, exam patterns, and study materials.
             </p>
           </div>
         </div>
@@ -113,7 +87,7 @@ const StudentCorner = () => {
             {magazines.map((magazine, index) => (
               <div
                 key={index}
-                className="bg-card border border-border hover:border-accent/50 transition-all duration-300 overflow-hidden"
+                className="bg-card border border-border hover:border-accent/50 transition-all duration-300 overflow-hidden rounded-3xl"
               >
                 <div className="aspect-[3/4] bg-muted flex items-center justify-center">
                   <div className="text-center">
@@ -139,48 +113,6 @@ const StudentCorner = () => {
 
       <GoldDivider />
 
-      {/* Defence News */}
-      <section className="section-padding bg-card">
-        <div className="container mx-auto">
-          <SectionHeading
-            title="Defence News"
-            subtitle="Latest updates on examinations, notifications, and defence sector"
-          />
-
-          <div className="max-w-4xl mx-auto space-y-4">
-            {news.map((item, index) => (
-              <div
-                key={index}
-                className="bg-background border border-border p-4 md:p-6 hover:border-accent/50 transition-colors flex flex-col md:flex-row md:items-center gap-4"
-              >
-                <div className="flex items-center gap-4 flex-1">
-                  <div className="w-10 h-10 bg-muted flex items-center justify-center shrink-0">
-                    <Newspaper size={18} className="text-accent" />
-                  </div>
-                  <div>
-                    <h4 className="font-heading text-sm tracking-wide mb-1">{item.title}</h4>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <Calendar size={12} />
-                        {item.date}
-                      </span>
-                      <span className="px-2 py-0.5 bg-accent/20 text-accent text-xs">
-                        {item.category}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <Button variant="link" size="sm" className="self-start md:self-center">
-                  Read More →
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <GoldDivider />
-
       {/* Exam Patterns */}
       <section className="section-padding">
         <div className="container mx-auto">
@@ -193,7 +125,7 @@ const StudentCorner = () => {
             {examPatterns.map((exam, index) => (
               <div
                 key={index}
-                className="bg-card border border-border overflow-hidden"
+                className="bg-card border border-border overflow-hidden rounded-3xl"
               >
                 <div className="bg-muted/50 px-6 py-4 border-b border-border">
                   <h3 className="font-heading text-lg tracking-wide flex items-center gap-3">
@@ -230,41 +162,6 @@ const StudentCorner = () => {
                     </table>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <GoldDivider />
-
-      {/* Syllabus Downloads */}
-      <section className="section-padding bg-card">
-        <div className="container mx-auto">
-          <SectionHeading
-            title="Syllabus Downloads"
-            subtitle="Complete syllabi for all defence examinations"
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {[
-              { name: "NDA Syllabus 2024", size: "2.4 MB" },
-              { name: "CDS Syllabus 2024", size: "1.8 MB" },
-              { name: "Sainik School Syllabus", size: "1.2 MB" },
-            ].map((file, index) => (
-              <div
-                key={index}
-                className="bg-background border border-border p-6 text-center hover:border-accent/50 transition-colors"
-              >
-                <FileText size={32} className="text-accent mx-auto mb-3" />
-                <h4 className="font-heading text-sm tracking-wide mb-1">{file.name}</h4>
-                <p className="text-xs text-muted-foreground mb-4">{file.size}</p>
-                <Button variant="outline" size="sm" asChild>
-                  <a href="#" onClick={(e) => e.preventDefault()}>
-                    <Download size={14} />
-                    Download
-                  </a>
-                </Button>
               </div>
             ))}
           </div>

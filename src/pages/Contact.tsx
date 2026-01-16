@@ -56,9 +56,9 @@ const Contact = () => {
   };
 
   return (
-    <main className="pt-16 md:pt-20 pb-20 lg:pb-0">
+    <main className="pb-20 lg:pb-0">
       {/* Hero */}
-      <section className="section-padding bg-card">
+      <section className="pt-32 pb-16 md:pt-40 md:pb-24 px-4 md:px-8 bg-card">
         <div className="container mx-auto text-center">
           <div className="animate-fade-in-up">
             <h1 className="heading-display text-foreground mb-6">
@@ -86,7 +86,7 @@ const Contact = () => {
             {eligibilityCriteria.map((item, index) => (
               <div
                 key={index}
-                className="bg-card border border-border p-6 hover:border-accent/50 transition-colors"
+                className="bg-card border border-border p-6 hover:border-accent/50 transition-colors rounded-3xl"
               >
                 <h3 className="font-heading text-lg tracking-wide mb-4 pb-4 border-b border-border">
                   {item.program}
@@ -121,8 +121,8 @@ const Contact = () => {
               />
 
               <div className="space-y-4">
-                <div className="bg-card border border-border p-6 flex items-start gap-4">
-                  <div className="w-12 h-12 bg-muted flex items-center justify-center shrink-0">
+                <div className="bg-card border border-border p-6 flex items-start gap-4 rounded-3xl">
+                  <div className="w-12 h-12 bg-muted flex items-center justify-center shrink-0 rounded-full">
                     <MapPin size={20} className="text-accent" />
                   </div>
                   <div>
@@ -135,8 +135,8 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="bg-card border border-border p-6 flex items-start gap-4">
-                  <div className="w-12 h-12 bg-muted flex items-center justify-center shrink-0">
+                <div className="bg-card border border-border p-6 flex items-start gap-4 rounded-3xl">
+                  <div className="w-12 h-12 bg-muted flex items-center justify-center shrink-0 rounded-full">
                     <Phone size={20} className="text-accent" />
                   </div>
                   <div>
@@ -148,8 +148,8 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="bg-card border border-border p-6 flex items-start gap-4">
-                  <div className="w-12 h-12 bg-muted flex items-center justify-center shrink-0">
+                <div className="bg-card border border-border p-6 flex items-start gap-4 rounded-3xl">
+                  <div className="w-12 h-12 bg-muted flex items-center justify-center shrink-0 rounded-full">
                     <Mail size={20} className="text-accent" />
                   </div>
                   <div>
@@ -161,8 +161,8 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="bg-card border border-border p-6 flex items-start gap-4">
-                  <div className="w-12 h-12 bg-muted flex items-center justify-center shrink-0">
+                <div className="bg-card border border-border p-6 flex items-start gap-4 rounded-3xl">
+                  <div className="w-12 h-12 bg-muted flex items-center justify-center shrink-0 rounded-full">
                     <Clock size={20} className="text-accent" />
                   </div>
                   <div>
@@ -178,7 +178,7 @@ const Contact = () => {
 
             {/* Contact Form */}
             <div>
-              <form onSubmit={handleSubmit} className="bg-card border border-border p-6 md:p-8">
+              <form onSubmit={handleSubmit} className="bg-card border border-border p-6 md:p-8 rounded-3xl">
                 <h3 className="font-heading text-xl tracking-wide mb-6">ADMISSION INQUIRY & CONTACT</h3>
 
                 <div className="space-y-5">
@@ -192,7 +192,7 @@ const Contact = () => {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground"
+                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground rounded-full"
                       placeholder="Enter your full name"
                     />
                   </div>
@@ -208,7 +208,7 @@ const Contact = () => {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground"
+                        className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground rounded-full"
                         placeholder="your.email@example.com"
                       />
                     </div>
@@ -222,7 +222,7 @@ const Contact = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground"
+                        className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground rounded-full"
                         placeholder="+91 XXXXX XXXXX"
                       />
                     </div>
@@ -238,7 +238,7 @@ const Contact = () => {
                       value={formData.program}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground"
+                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground rounded-full appearance-none"
                     >
                       <option value="">Select an option</option>
                       <option value="spi">Admission: SPI Foundation (Class 6/9)</option>
@@ -259,7 +259,7 @@ const Contact = () => {
                       name="qualification"
                       value={formData.qualification}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground"
+                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground rounded-full"
                       placeholder="e.g. Class 10th Student, graduate (Optional)"
                     />
                   </div>
@@ -274,7 +274,7 @@ const Contact = () => {
                       onChange={handleChange}
                       required
                       rows={4}
-                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground resize-none"
+                      className="w-full px-4 py-3 bg-background border border-border focus:border-accent focus:outline-none text-foreground placeholder:text-muted-foreground resize-none rounded-2xl"
                       placeholder="Type your message here..."
                     />
                   </div>
@@ -301,7 +301,7 @@ const Contact = () => {
           />
 
           {/* Map Integration */}
-          <div className="h-[450px] w-full rounded-xl overflow-hidden border border-border shadow-lg relative bg-muted">
+          <div className="h-[450px] w-full rounded-3xl overflow-hidden border border-border shadow-lg relative bg-muted">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3493.3285143942576!2d75.329298!3d19.8706258!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bdb99005b6b2979%3A0x6cd128d6e472e1a2!2sDefence%20Simplified!5e1!3m2!1sen!2sin!4v1767809883082!5m2!1sen!2sin"
               width="100%"

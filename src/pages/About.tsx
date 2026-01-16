@@ -4,9 +4,9 @@ import GoldDivider from "@/components/GoldDivider";
 
 const About = () => {
   return (
-    <main className="pt-16 md:pt-20 pb-20 lg:pb-0">
+    <main className="pb-20 lg:pb-0">
       {/* Hero */}
-      <section className="section-padding bg-card">
+      <section className="pt-32 pb-16 md:pt-40 md:pb-24 px-4 md:px-8 bg-card">
         <div className="container mx-auto text-center">
           <div className="animate-fade-in-up">
             <h1 className="heading-display text-foreground mb-6">
@@ -32,9 +32,9 @@ const About = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="space-y-6">
-              <div className="bg-card border border-border p-6">
+              <div className="bg-card border border-border p-6 rounded-3xl">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-muted flex items-center justify-center shrink-0">
+                  <div className="w-12 h-12 bg-muted flex items-center justify-center shrink-0 rounded-full">
                     <Shield size={24} className="text-accent" />
                   </div>
                   <div>
@@ -47,9 +47,9 @@ const About = () => {
                 </div>
               </div>
 
-              <div className="bg-card border border-border p-6">
+              <div className="bg-card border border-border p-6 rounded-3xl">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-muted flex items-center justify-center shrink-0">
+                  <div className="w-12 h-12 bg-muted flex items-center justify-center shrink-0 rounded-full">
                     <Target size={24} className="text-accent" />
                   </div>
                   <div>
@@ -62,9 +62,9 @@ const About = () => {
                 </div>
               </div>
 
-              <div className="bg-card border border-border p-6">
+              <div className="bg-card border border-border p-6 rounded-3xl">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-muted flex items-center justify-center shrink-0">
+                  <div className="w-12 h-12 bg-muted flex items-center justify-center shrink-0 rounded-full">
                     <Users size={24} className="text-accent" />
                   </div>
                   <div>
@@ -79,7 +79,7 @@ const About = () => {
             </div>
 
             {/* CMS: Gallery */}
-            <div className="bg-muted flex flex-col items-center justify-center min-h-[400px] border border-border p-8 text-center">
+            <div className="bg-muted flex flex-col items-center justify-center min-h-[400px] border border-border p-8 text-center rounded-3xl">
               <Shield size={64} className="text-muted-foreground mb-4 opacity-50" />
               <h3 className="text-xl font-heading text-foreground mb-2">INSTITUTE GALLERY</h3>
               <p className="text-muted-foreground mb-6 max-w-xs">
@@ -87,7 +87,7 @@ const About = () => {
               </p>
               <a
                 href="/gallery"
-                className="inline-flex items-center justify-center px-6 py-3 bg-accent text-accent-foreground font-heading tracking-wide hover:bg-accent/90 transition-colors"
+                className="inline-flex items-center justify-center px-6 py-3 bg-accent text-accent-foreground font-heading tracking-wide hover:bg-accent/90 transition-colors rounded-full"
               >
                 VIEW GALLERY
               </a>
@@ -102,9 +102,9 @@ const About = () => {
       <section className="section-padding bg-card">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-background border border-border p-8">
+            <div className="bg-background border border-border p-8 rounded-3xl">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 bg-accent flex items-center justify-center">
+                <div className="w-14 h-14 bg-accent flex items-center justify-center rounded-full">
                   <Target size={28} className="text-accent-foreground" />
                 </div>
                 <h2 className="font-heading text-2xl tracking-wide">OUR MISSION</h2>
@@ -116,9 +116,9 @@ const About = () => {
               </p>
             </div>
 
-            <div className="bg-background border border-border p-8">
+            <div className="bg-background border border-border p-8 rounded-3xl">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 bg-accent flex items-center justify-center">
+                <div className="w-14 h-14 bg-accent flex items-center justify-center rounded-full">
                   <Eye size={28} className="text-accent-foreground" />
                 </div>
                 <h2 className="font-heading text-2xl tracking-wide">OUR VISION</h2>
@@ -144,9 +144,9 @@ const About = () => {
           />
 
           <div className="max-w-4xl mx-auto">
-            <div className="bg-card border border-border p-8 md:p-10">
+            <div className="bg-card border border-border p-8 md:p-10 rounded-3xl">
               <div className="flex flex-col md:flex-row gap-8 items-start">
-                <div className="w-40 h-48 bg-muted shrink-0 flex items-center justify-center">
+                <div className="w-40 h-48 bg-muted shrink-0 flex items-center justify-center rounded-2xl">
                   <Award size={48} className="text-muted-foreground" />
                 </div>
                 <div>
@@ -170,39 +170,6 @@ const About = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <GoldDivider />
-
-      {/* Infrastructure */}
-      <section className="section-padding bg-card">
-        <div className="container mx-auto">
-          <SectionHeading
-            title="Our Infrastructure"
-            subtitle="State-of-the-art facilities designed for comprehensive training"
-          />
-
-          {/* CMS: Gallery */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              "Academic Block",
-              "Physical Training Ground",
-              "Library & Study Hall",
-              "Hostel Facility",
-              "Computer Lab",
-              "Conference Hall",
-              "Obstacle Course",
-              "Indoor Sports"
-            ].map((facility, index) => (
-              <div
-                key={index}
-                className="aspect-square bg-background border border-border flex items-center justify-center hover:border-accent/50 transition-colors"
-              >
-                <span className="font-heading text-sm tracking-wide text-center px-4">{facility}</span>
-              </div>
-            ))}
           </div>
         </div>
       </section>

@@ -38,9 +38,9 @@ const Results = () => {
     );
   }
   return (
-    <main className="pt-16 md:pt-20 pb-20 lg:pb-0">
+    <main className="pb-20 lg:pb-0">
       {/* Hero */}
-      <section className="section-padding bg-card">
+      <section className="pt-32 pb-16 md:pt-40 md:pb-24 px-4 md:px-8 bg-card">
         <div className="container mx-auto text-center">
           <div className="animate-fade-in-up">
             <h1 className="heading-display text-foreground mb-6">
@@ -63,7 +63,7 @@ const Results = () => {
             {stats.map((stat, index) => (
               <div
                 key={index}
-                className="text-center p-6 bg-card border border-border"
+                className="text-center p-6 bg-card border border-border rounded-3xl"
               >
                 <div className="text-4xl md:text-5xl font-heading text-accent mb-2">
                   {stat.number}
@@ -91,7 +91,7 @@ const Results = () => {
             {achievers.map((student, index) => (
               <div
                 key={index}
-                className="group bg-background border border-border hover:border-accent/50 transition-all duration-300 overflow-hidden"
+                className="group bg-background border border-border hover:border-accent/50 transition-all duration-300 overflow-hidden rounded-3xl"
               >
                 <div className="h-1 bg-gradient-to-r from-accent/50 via-accent to-accent/50" />
                 <div className="p-6">
@@ -105,7 +105,7 @@ const Results = () => {
                     </div>
                   )}
                   <div className="text-center">
-                    <span className="inline-block px-3 py-1 text-xs font-heading bg-accent text-accent-foreground mb-3">
+                    <span className="inline-block px-3 py-1 text-xs font-heading bg-accent text-accent-foreground mb-3 rounded-full">
                       {student.rank}
                     </span>
                     <h4 className="font-heading text-lg tracking-wide mb-1">{student.name}</h4>
@@ -134,7 +134,7 @@ const Results = () => {
               {achievers.slice(0, 4).map((student, index) => (
                 <div
                   key={index}
-                  className="bg-card border border-border p-6 md:p-8 hover:border-accent/50 transition-colors"
+                  className="bg-card border border-border p-6 md:p-8 hover:border-accent/50 transition-colors rounded-3xl"
                 >
                   <div className="flex flex-col md:flex-row gap-6">
                     {student.image ? (

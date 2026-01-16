@@ -26,8 +26,8 @@ const Gallery = () => {
   });
 
   return (
-    <main className="pt-16 md:pt-20 pb-20 lg:pb-0 min-h-screen">
-      <section className="section-padding bg-card">
+    <main className="pb-20 lg:pb-0 min-h-screen">
+      <section className="pt-32 pb-16 md:pt-40 md:pb-24 px-4 md:px-8 bg-card">
         <div className="container mx-auto text-center">
           <div className="animate-fade-in-up">
             <h1 className="heading-display text-foreground mb-6">
