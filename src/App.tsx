@@ -27,6 +27,7 @@ import PermissionsPanel from "./pages/admin/PermissionsPanel";
 
 import AdminWelcome from "./pages/admin/AdminWelcome";
 import ScrollToTop from "./components/ScrollToTop";
+import VercelAnalyticsGuide from "./pages/VercelAnalyticsGuide";
 
 import { AuthProvider } from "./contexts/AuthProvider";
 import { useEffect } from "react";
@@ -58,6 +59,7 @@ const App = () => {
                 <Route path="/gallery" element={<GalleryManagement />} />
                 <Route path="/results" element={<Results />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/docs/vercel-analytics" element={<VercelAnalyticsGuide />} />
                 <Route path="/login" element={
                   <PublicRoute>
                     <LoginPage />
