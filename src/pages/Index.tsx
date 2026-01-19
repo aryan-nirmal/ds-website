@@ -54,7 +54,12 @@ const Index = () => {
       {/* Hero Section */}
       <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-charcoal-light/70 to-background z-0" />
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1595760780346-f972eb49f094?q=80&w=2515&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-overlay z-0" />
+        <img
+          src="https://images.unsplash.com/photo-1595760780346-f972eb49f094?q=80&w=2515&auto=format&fit=crop"
+          alt="Defence Academy Training"
+          className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-overlay z-0"
+          fetchPriority="high"
+        />
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
 
         <div className="container mx-auto px-4 pt-32 pb-20 md:pt-40 md:pb-32 relative z-10 text-center">
